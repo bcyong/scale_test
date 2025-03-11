@@ -23,9 +23,51 @@ The data in this project proceeds as follows:
 2. Data from each Task is used to create a Task object, with associated Annotations created as well
 3. The source image related to the Task is downloaded
 4. A set of quality checks are performed on each Task, both analyzing individual Annotations as well as the full set of Annotations for a Task
-5. A JSON report is saved to disk listing Annotations for each Task that have been flagged with warnings or errors, along with the associated error messages
+5. A JSON report is saved to disk listing Annotations for each Task that have been flagged with `WARNING`s or `ERROR`s, along with the associated error messages
 
 # Quality Checks Implemented
+
+The quality checks implemented fall under a few broad categories which are detailed here
+
+## Basic Annotation Validity
+
+These are a basic sanity check on the data present in each Annotation. These checks ensure that the data is well-formed and valid. They may be a bit overkill because the data is being pulled from Scale's servers, but it never hurts to check again. Failing any of these checks results in the Annotation being tagged as an `ERROR`.
+
+1. All mandatory data exists for an Annotation (`left`, `top`, `width`, `height`, `label`, `occlusion`, `truncation`, `background_color`)
+2. All Annotation enumerized data is marked with available values
+3. Annotation bounding boxes do not exceed image canvas
+4. Annotations labeled `non_visible_face` must have a `background_color` of `non_applicable`
+   
+## Size Heuristics
+
+These checks identify potential errors related to the size of the Annotation as well as truncation. The size of an annotation itself or when compared to the source iamge can provide powerful indications of potential problems.
+
+1. Annotations with any dimension of `0 ` are disallowed despite being allowed in the Task parameters (`ERROR`)
+2. Annotations with a `truncation` of `100%` are disallowed as they would be fully invisible (`ERROR`)
+3. Annotations that are very small (< `SIZE_MIN_SIZE_WARNING`) with no truncation (`0%`) that are not labeled `non_visible_face` are flagged, as it's unlikely the labeler would be able to dtermine the type of sign (`WARNING`)
+4. Annotations that are very small (<`SIZE_MIN_SIZE_WARNING`) and not mostly truncated (`75%`) are flagged (`ERRROR`)
+5. Annotations that are too large relative to the source iamge size (`SIZE_RATIO_WARNING_THRESHOLD`) in either dimension are flagged, as it's unlikely a sign would dominate the view from within a vehicle (`ERROR`)
+6. Annotations with very extreme aspect ratios (`ASPECT_RATIO_WARNING_THRESHOLD`) without very high truncation are flagged, as they are unlikely to exist (`WARNING`)
+
+## Position Heuristics
+
+This check makes a prior assumption that no sign will extend into the bottom section of the image, as this would be directly in front of the vehicle. This also covers some instances of painted streets being annotated, as that is explictly disallowed in the specifications.
+
+1. If the lower position of the Annotation extends within `POSITION_LOWER_WARNING_THRESHOLD`% of the source image, this annotation is flagged (`WARNING`)
+
+## Color Heuristics
+
+These checks attempt to look at the colors within the cropped iamge of the Annotation to flag potential illegible signs, as well as sanity check colors for certain labels.
+
+1. If the average color of the Annotation is too dim or too bright to likely be legible, it is flagged (`WARNING`)
+2. If the Annotation is labeled as a `construction_sign` and the dominant color is not some shade of orange, it is flagged (`WARNING`)
+
+## Bounding Box Heuristics
+
+These checks look at bounding box interactions between Annotations within a Task to determine if there is any duplication.
+
+1. If intersection over union is very high (`BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD`) between two Annotations, both Annotations are flagged (`ERROR`)
+2. If intersection over union is moderate (`BOUNDING_BOX_IOU_OVERLAP_WARNING_THRESHOLD`) between two Annotations, both Annotations are flagged (`WARNING`)
 
 # Run Instructions 
 Usage:
