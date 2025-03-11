@@ -114,7 +114,7 @@ Upon visual inspection the annotations are pretty good. `information_sign` `d768
 
 The quality checks did not return any problematic annotations here. 
 
-Upon visual inspection the annotions seem solid.
+Upon visual inspection the annotations seem solid.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6c3a6b1000172320ad)
   ```
@@ -267,7 +267,7 @@ Upon visual inspection, the 6 identified annotations are indeed duplicates of ea
 
 The quality checks did not return any problematic annotations here. 
 
-Upon visual inspection the annotions seem solid. There is a glaring omission of 2 `policy_sign` in the right foreground and a less visible sign in the right background on a light pole from the annotations.
+Upon visual inspection the annotations seem solid. There is a glaring omission of 2 `policy_sign` in the right foreground and a less visible sign in the right background on a light pole from the annotations.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f643a6b1000172320a5)
   ```
@@ -317,7 +317,7 @@ Upon visual inspection, `b54b` is correctly labeled as a `construction_sign`, bu
 
 The quality checks did not return any problematic annotations here. 
 
-Upon visual inspection the annotions seem solid.
+Upon visual inspection the annotations seem solid.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5ab1cb1300109e4ffc)
   ```
@@ -420,14 +420,14 @@ The full report can be found [here](sample/report.json)
 
 # Improvements and Future Quality Checks
 
-This project was implemented in a timeboxed environment so the implemented heuristics strongly favored effectiveness achievable with a limited implementation time. Given more time for thought and implementation, a numbner of imrprovements and new quality checks could be added to greatly increase the effectiveness in identifying potentially problematic Annotations.
+This project was implemented in a timeboxed environment so the implemented heuristics strongly favored effectiveness achievable with a limited implementation time. Given more time for thought and implementation, a number of improvements and new quality checks could be added to greatly increase the effectiveness in identifying potentially problematic Annotations.
 
 ## Improvements
 
 1. Fix the implementation for the bounding box checks to optimize for runtime efficiency. The current check runs in O(n^2) time which will bog down in production environments. Switching to a quad tree algorithm should decrease the average runtime to O(n log n).
 2. Expand the use of color-based heuristics. The current checks are simplistic and a deeper exploration into using all of the dominant colors as well as their percentages to validate Annotation label types seems likely to increase effectiveness. More sophisticated calculations to determine brightness rather than simply summing up the RGB values will likely increase effectiveness as well. `background_color` could also be verified programmatically.
 3. Reccomment that **ObserveSign** modify their specification to either add a new label for illegible signs, or modify the criteria for `non_visible_face` to include illegible signs. Currently it appears some labelers are using a sign is too illegible to determine a label, even though the sign may not necessarily be presenting a `non_visible_face` as defined in the current specifications.
-4. Increase the flexibilty and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calcuations are run so they're not running unnecessarily if the test is disabled by the user.
+4. Increase the flexibility and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calcuations are run so they're not running unnecessarily if the test is disabled by the user.
 
 ## Future Quality Checks
 
