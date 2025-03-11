@@ -442,4 +442,14 @@ This project was implemented in a timeboxed environment so the implemented heuri
 
 # Conclusion
 
+In this project, we developed a programmatic quality check script that ingests labeled traffic sign images, analyzes annotations for potential issues, and outputs an error report. By implementing multiple checks ranging from bounding box size and position validations to color-based heuristics, this project helps ensure that annotations conform to project guidelines and maintain consistently high quality.
 
+## Key Takeaways
+
+1. Improved Annotation Reliability: Automated checks reduce human error by systematically flagging suspicious bounding boxes and invalid attributes.
+2. Scalable Validation: The solution can be applied to large datasets (e.g., 250k images), providing quick feedback loops for annotation teams and facilitating continuous data QA.
+3. Flexible Architecture: The script is modular and supports easy addition of new checks. This design allows for evolving the QA pipeline to address new or changing labeling needs.
+
+## Note
+
+Just a quick word of thanks to the Scale team for choosing a problem that's relevant, open-ended and interesting!
