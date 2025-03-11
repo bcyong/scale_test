@@ -51,9 +51,9 @@ options:
 ## Tasks
 
 <details>
-  <summary>5f127f6f26831d0010e985e5</summary>
+<summary>5f127f6f26831d0010e985e5</summary>
 
-  The quality checks did not return any problematic annotations here. Upon visual inspection, the annotations are pretty good. `information_sign` `d768` overlaps the bounding box for `b60b` and would benefit from a programmatic check of total overlap by other bounding boxes as opposed to the intersection over union check this project implements to ensure that either `d768` or `b60b` is marked at least partially occluded.
+The quality checks did not return any problematic annotations here. Upon visual inspection, the annotations are pretty good. `information_sign` `d768` overlaps the bounding box for `b60b` and would benefit from a programmatic check of total overlap by other bounding boxes as opposed to the intersection over union check this project implements to ensure that either `d768` or `b60b` is marked at least partially occluded.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6f26831d0010e985e5)
 
@@ -66,7 +66,9 @@ options:
 </details>
 
 <details>
-  <summary>5f127f6c3a6b1000172320ad</summary>
+<summary>5f127f6c3a6b1000172320ad</summary>
+
+The quality checks did not return any problematic annotations here.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6c3a6b1000172320ad)
   ```
@@ -78,7 +80,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f699740b80017f9b170</summary>
+<summary>5f127f699740b80017f9b170</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f699740b80017f9b170)
   ```
@@ -123,7 +125,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f671ab28b001762c204</summary>
+<summary>5f127f671ab28b001762c204</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f671ab28b001762c204)
   ```
@@ -216,7 +218,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f643a6b1000172320a5</summary>
+<summary>5f127f643a6b1000172320a5</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f643a6b1000172320a5)
   ```
@@ -228,7 +230,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f5f3a6b100017232099</summary>
+<summary>5f127f5f3a6b100017232099</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5f3a6b100017232099)
   ```
@@ -266,7 +268,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f5ab1cb1300109e4ffc</summary>
+<summary>5f127f5ab1cb1300109e4ffc</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5ab1cb1300109e4ffc)
   ```
@@ -278,7 +280,7 @@ options:
 </details>
 
 <details>
-  <summary>5f127f55fdc4150010e37244</summary>
+<summary>5f127f55fdc4150010e37244</summary>
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f55fdc4150010e37244)
   ```
