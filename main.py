@@ -115,7 +115,7 @@ def check_annotation_size(annotation, image):
             annotation.add_error_message(ERROR_MSG_PROBABLY_NOT_LEGIBLE.format(annotation.label, width, height))
 
         # Allow for ery truncated signs causing small sizes
-        if annotation.truncation != "100%" and annotation.truncation != "75%":
+        if annotation.truncation != "75%":
             annotation.set_error_level(ErrorLevel.ERROR)
             annotation.add_error_message(ERROR_MSG_SIZE_TOO_SMALL.format(width, height))
 
@@ -128,7 +128,7 @@ def check_annotation_size(annotation, image):
     if (width / annotation.height > ASPECT_RATIO_WARNING_THRESHOLD or height / annotation.width > ASPECT_RATIO_WARNING_THRESHOLD):
 
         # Allow for very truncated signs causing extreme aspect ratios
-        if annotation.truncation != "100%" and annotation.truncation != "75%":
+        if annotation.truncation != "75%":
             annotation.set_error_level(ErrorLevel.WARNING)
             annotation.add_error_message(ERROR_MSG_ASPECT_RATIO_TOO_EXTREME.format(max(width / height, height / width)))
 
