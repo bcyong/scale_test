@@ -239,19 +239,15 @@ Upon visual inspection the annotions seem solid. There is a glaring omission of 
 <details>
 <summary>5f127f5f3a6b100017232099</summary>
 
+The quality checks identify 1 `construction_sign` annotation with a color mismatch, and 1 annotation that's both too large relative to the full image as well as too low to the bottom of the image.
+
+Upon visual inspection, `b54b` is correctly labeled as a `construction_sign`, but the bounding box includes the tree next to it, leading the quality check to identify the dominant color as a brown instead of an orange for a successful warning. `3687` is incorrectly labeling a street marking, which is correctly marked an error by the quality check checking lowest position of the annotation relative to the image. The rest of the annotations look solid, with the exception of a couple missed signs.
+
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5f3a6b100017232099)
   ```
         {
             "task_id": "5f127f5f3a6b100017232099",
             "annotations": [
-                {
-                    "uuid": "86f7d374-8574-42be-ab2d-3f2945992f31",
-                    "label": "non_visible_face",
-                    "error_level": 1,
-                    "error_messages": [
-                        "Aspect ratio too extreme 5.25"
-                    ]
-                },
                 {
                     "uuid": "478496a5-1d09-4d53-889a-ef56a561b54b",
                     "label": "construction_sign",
