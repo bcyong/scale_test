@@ -53,7 +53,9 @@ options:
 <details>
 <summary>5f127f6f26831d0010e985e5</summary>
 
-The quality checks did not return any problematic annotations here. Upon visual inspection the annotations are pretty good. `information_sign` `d768` overlaps the bounding box for `b60b` and would benefit from a programmatic check of total overlap by other bounding boxes as opposed to the intersection over union check this project implements to ensure that either `d768` or `b60b` is marked at least partially occluded.
+The quality checks did not return any problematic annotations here. 
+
+Upon visual inspection the annotations are pretty good. `information_sign` `d768` overlaps the bounding box for `b60b` and would benefit from a programmatic check of total overlap by other bounding boxes as opposed to the intersection over union check this project implements to ensure that either `d768` or `b60b` is marked at least partially occluded.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6f26831d0010e985e5)
 
@@ -68,7 +70,9 @@ The quality checks did not return any problematic annotations here. Upon visual 
 <details>
 <summary>5f127f6c3a6b1000172320ad</summary>
 
-The quality checks did not return any problematic annotations here. Upon visual inspection the annotions seem solid.
+The quality checks did not return any problematic annotations here. 
+
+Upon visual inspection the annotions seem solid.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6c3a6b1000172320ad)
   ```
@@ -81,6 +85,10 @@ The quality checks did not return any problematic annotations here. Upon visual 
 
 <details>
 <summary>5f127f699740b80017f9b170</summary>
+
+The quality checks identify 3 Annotations as too dim, and 1 Annotation as too bright, and marks them as warnings.
+
+Upon visual inspection, it does appear that the majority of the Annotations are either too dim or too bright, enough so as to question if there should be Annotations there at all. `4d8c`, `5533`, and `802a` are all marked correctly marked as dim, and `da64` is correctly marked as too bright. `1000` is also probably too dim but the brightness exceeds that of the current threshold set for the quality check.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f699740b80017f9b170)
   ```
