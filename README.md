@@ -425,7 +425,7 @@ This project was implemented in a timeboxed environment so the implemented heuri
 ## Improvements
 
 1. Fix the implementation for the bounding box checks to optimize for runtime efficiency. The current check runs in O(n^2) time which will bog down in production environments. Switching to a quad tree algorithm should decrease the average runtime to O(n log n).
-2. Expand the use of color-based heuristics. The current checks are simplistic and a deeper exploration into using all of the dominant colors as well as their percentages to validate Annotation label types seems likely to increase effectiveness. More sophisticated calculations to determine brightness rather than simply summing up the RGB values will likely increase effectiveness as well.
+2. Expand the use of color-based heuristics. The current checks are simplistic and a deeper exploration into using all of the dominant colors as well as their percentages to validate Annotation label types seems likely to increase effectiveness. More sophisticated calculations to determine brightness rather than simply summing up the RGB values will likely increase effectiveness as well. `background_color` could also be verified programmatically.
 3. Reccomment that **ObserveSign** modify their specification to either add a new label for illegible signs, or modify the criteria for `non_visible_face` to include illegible signs. Currently it appears some labelers are using a sign is too illegible to determine a label, even though the sign may not necessarily be presenting a `non_visible_face` as defined in the current specifications.
 4. Increase the flexibilty and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calcuations are run so they're not running unnecessarily if the test is disabled by the user.
 
@@ -434,5 +434,10 @@ This project was implemented in a timeboxed environment so the implemented heuri
 1. Add overlapping bounding box checks in addition to intersection over union checks. Annotations with a high percentage of overlap are likely either occluding or being occluded by another sign, so a higher `occlusion` should be checked in these cases.
 2. Perform simplistic shape detection within the image crop of an Annotation. Some labels (especially `traffic_control_sign`) correlate strongly to particular sign shapes so this potentially could add a lot of signal to checking Annotation correctness.
    - Using shape detection seems like a likely candidate to identify traffic lights due to their unique shape arrangement, which would allow checks to ensure `background_color` is properly labeled as `other` when a sign is likely a traffic light.
+   - Box detection resulting from shape detection could allow Annotations to be checked for potentially grouped signs, which is another edge case excplitly disallowed in the specifications.
+3. Perform OCR on the image crops of Annotations. Many signs have a very standardized set of possible text (`STOP`, `YIELD`, `SPEED LIMIT`, etc) and identifying the words present in an Annotation would give a very strong signal in determining if the label is correct.
+4. There may be some correlation between some sign types existing in a scene and the prescence or absence of other sign types. Exploring existing datasets may allow some predictability when evaluating the set of Annotations of a Task.
+5. 
+6. 
 
 # Conclusion
