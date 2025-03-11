@@ -428,6 +428,7 @@ This project was implemented in a timeboxed environment so the implemented heuri
 2. Expand the use of color-based heuristics. The current checks are simplistic and a deeper exploration into using all of the dominant colors as well as their percentages to validate Annotation label types seems likely to increase effectiveness. More sophisticated calculations to determine brightness rather than simply summing up the RGB values will likely increase effectiveness as well. `background_color` could also be verified programmatically.
 3. Reccomment that **ObserveSign** modify their specification to either add a new label for illegible signs, or modify the criteria for `non_visible_face` to include illegible signs. Currently it appears some labelers are using a sign is too illegible to determine a label, even though the sign may not necessarily be presenting a `non_visible_face` as defined in the current specifications.
 4. Increase the flexibility and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calculations are run so they're not running unnecessarily if the test is disabled by the user.
+5. Add different types of output formats for the generated report, potentially with the ability to add image data into the report itself. This will allow reviewers to quickly identify the Annotations being flagged and more quickly identify and correct mistakes.
 
 ## Future Quality Checks
 
@@ -440,3 +441,5 @@ This project was implemented in a timeboxed environment so the implemented heuri
 5. Explore ML-based approaches to either pre-labeling or verifying annotated images. Scale has a very large dataset of labeled, reliable autonomous vehicle image data which could be used to quickly build a classifier that conforms to the labels that **ObserveSign** is trying to label. Leveraging that dataset should provide a very quick way to efficiently provide automated quality checks on annotated images.
 
 # Conclusion
+
+
