@@ -1,11 +1,10 @@
-import scaleapi
-from scaleapi.tasks import TaskStatus
-from task import Task, Annotation, ErrorLevel
-import numpy as np
-import torchvision.ops.boxes as bops
 import json
 import base64
 import argparse
+import scaleapi
+from scaleapi.tasks import TaskStatus
+import torchvision.ops.boxes as bops
+from task import Task, ErrorLevel
 
 API_KEY = "live_b1c5a645ea7e418a969b42b134e2d2d6"
 PROJECT_NAME = "Traffic Sign Detection"
@@ -21,7 +20,7 @@ ASPECT_RATIO_WARNING_THRESHOLD = 5
 
 POSITION_LOWER_WARNING_THRESHOLD = 0.15
 
-COLOR_TOO_DARK_THRESHOLD = 80
+COLOR_TOO_DARK_THRESHOLD = 100
 COLOR_TOO_BRIGHT_THRESHOLD = 650
 
 BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD = 0.9
@@ -55,7 +54,7 @@ def get_tasks(client, project_name, created_after, created_before):
         "created_after": created_after,  # Filter by start time (optional)
         "created_before": created_before,  # Filter by end time (optional)
     }
-    
+
     # Retrieve the list of tasks with optional filters
     tasks = client.get_tasks(**filters)
 
@@ -139,7 +138,7 @@ def check_annotation_position(annotation, image):
         annotation.set_error_level(ErrorLevel.WARNING)
         annotation.add_error_message(ERROR_MSG_POSITION_TOO_LOW.format(annotation.top + annotation.height, image_height - (image_height * POSITION_LOWER_WARNING_THRESHOLD)))
 
-# Checks if the color of the sign is correct
+# Checks heuristics related to the color of the sign
 def check_annotation_color(annotation):
     brightness = sum(annotation.average_color)
 
@@ -194,7 +193,7 @@ def generate_task_report(task):
     task_report["annotations"] = []
 
     for annotation in task.annotations:
-        if annotation.error_level == ErrorLevel.WARNING or annotation.error_level == ErrorLevel.ERROR:
+        if annotation.error_level != ErrorLevel.NORMAL:
             annotation_report = {}
             annotation_report["uuid"] = annotation.uuid
             annotation_report["label"] = annotation.label

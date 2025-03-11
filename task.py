@@ -1,10 +1,9 @@
+from enum import IntEnum
 import requests
 from PIL import Image
 import cv2
 import numpy as np
-from sklearn.cluster import KMeans
 import torch
-from enum import IntEnum
 
 TASK_ID_KEY = "task_id"
 STATUS_KEY = "status"
@@ -31,7 +30,7 @@ class ErrorLevel(IntEnum):
 class Task:
     def __init__(self, task_dict):
         self.__dict__ = task_dict
-        
+
         self.task_id = self.__dict__.get(TASK_ID_KEY)
         self.status = self.__dict__.get(STATUS_KEY)
 
@@ -43,7 +42,7 @@ class Task:
 
         params = self.__dict__.get(PARAMS_KEY)
         if params is None:
-            return            
+            return
         attachment = params.get(ATTACHMENT_KEY)
         if attachment is None or not isinstance(attachment, str):
             return
@@ -58,11 +57,11 @@ class Task:
             return
 
     def build_annotations(self):
-        self.annotations = list()
+        self.annotations = []
 
         response = self.__dict__.get("response")
         if response is None:
-            return 
+            return
 
         annotations = response.get("annotations")
         if annotations is None:
@@ -80,7 +79,7 @@ class Annotation:
 
         self.uuid = self.__dict__.get(UUID_KEY)
         self.label = self.__dict__.get(LABEL_KEY)
-        
+
         attributes = self.__dict__.get(ATTRIBUTES_KEY)
         self.occlusion = attributes.get(OCCLUSION_KEY)
         self.truncation = attributes.get(TRUNCATION_KEY)
@@ -90,10 +89,11 @@ class Annotation:
         self.top = self.__dict__.get(TOP_KEY)
         self.width = self.__dict__.get(WIDTH_KEY)
         self.height = self.__dict__.get(HEIGHT_KEY)
-        
+
         self.image_crop = None
         self.dominant_color = None
         self.dominant_colors = []
+        self.average_color = None
 
         self.bounding_box = torch.tensor([[self.left, self.top, self.left + self.width, self.top + self.height]], dtype=torch.float)
 
@@ -106,7 +106,7 @@ class Annotation:
         if image is not None:
             self.image_crop = image.crop((self.left, self.top, self.left + self.width, self.top + self.height))
             self.set_dominant_colors()
-        
+
     # Adapted from https://stackoverflow.com/questions/43111029/how-to-find-the-average-colour-of-an-image-in-python-with-opencv
     def set_dominant_colors(self):
 
@@ -115,13 +115,13 @@ class Annotation:
 
         # Convert PIL Image to numpy array and ensure it's RGB
         img_array = np.array(self.image_crop.convert('RGB'))
-        
+
         average = img_array.mean(axis=0).mean(axis=0)
         self.average_color = average.tolist()
 
         # Reshape the array to 2D (pixels x RGB)
         pixels = img_array.reshape(-1, 3)
-        
+
         # Convert to float32 for k-means
         pixels = np.float32(pixels)
 
@@ -153,8 +153,7 @@ class Annotation:
             })
 
     def set_error_level(self, error_level):
-        if error_level > self.error_level:
-            self.error_level = error_level
+        self.error_level = max(self.error_level, error_level)
 
     def add_error_message(self, error_message):
         self.error_messages.append(error_message)
