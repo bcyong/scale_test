@@ -135,7 +135,9 @@ Upon visual inspection, it does appear that the majority of the Annotations are 
 <details>
 <summary>5f127f671ab28b001762c204</summary>
 
-The quality checks identify one annotation as too dim 
+The quality checks identify 6 annotations as potential duplicates with very high intersection over union values and marked them as errors.
+
+Upon visual inspection, the 6 identified annotations are indeed duplicates of each other, all identifying the same `Montgomery Post` `information_sign`. The rest of the annotations look solid, with the exception of the ommission of a couple `traffic_control_sign`s.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f671ab28b001762c204)
   ```
