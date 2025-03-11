@@ -278,6 +278,10 @@ Upon visual inspection, it does appear that the majority of the Annotations are 
 <details>
 <summary>5f127f5ab1cb1300109e4ffc</summary>
 
+The quality checks did not return any problematic annotations here. 
+
+Upon visual inspection the annotions seem solid.
+
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5ab1cb1300109e4ffc)
   ```
         {
