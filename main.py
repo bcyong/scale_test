@@ -22,7 +22,7 @@ ASPECT_RATIO_WARNING_THRESHOLD = 5
 POSITION_LOWER_WARNING_THRESHOLD = 0.15
 
 COLOR_TOO_DARK_THRESHOLD = 80
-COLOR_TOO_BRIGHT_THRESHOLD = 600
+COLOR_TOO_BRIGHT_THRESHOLD = 650
 
 BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD = 0.9
 BOUNDING_BOX_IOU_OVERLAP_WARNING_THRESHOLD = 0.5
@@ -30,7 +30,6 @@ BOUNDING_BOX_IOU_OVERLAP_WARNING_THRESHOLD = 0.5
 # Error Messages
 ERROR_MSG_NO_SIZE = "No size"
 ERROR_MSG_INVALID_SIZE = "Invalid size"
-ERROR_MSG_INVALID_LABEL = "Invalid label"
 ERROR_MSG_OUT_OF_BOUNDS = "Out of bounds"
 ERROR_MSG_INVALID_LABEL = "Invalid label"
 ERROR_MSG_INVALID_ATTRIBUTES = "Invalid attributes"
@@ -211,7 +210,7 @@ def main(project_name, output_file, created_after, created_before):
     client = scaleapi.ScaleClient(API_KEY)
 
     report = {}
-    report["project_name"] = PROJECT_NAME
+    report["project_name"] = project_name
     report["tasks"] = []
 
     # Retrieve the list of tasks with optional filters
@@ -244,11 +243,6 @@ def main(project_name, output_file, created_after, created_before):
             continue
 
         for annotation in task.annotations:
-            uuid = annotation.uuid
-            if uuid is None:
-                print("no uuid")
-                continue
-
             validate_annotation(annotation, task.image)
 
         check_bounding_boxes(task)
