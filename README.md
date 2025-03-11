@@ -52,6 +52,8 @@ options:
 
 <details>
   <summary>5f127f6f26831d0010e985e5</summary>
+
+  The quality checks did not return any problematic annotations here. Upon visual inspection, the annotations are pretty good. `information_sign` `d768` overlaps the bounding box for `b60b` and would benefit from a programmatic check of total overlap by other bounding boxes as opposed to the intersection over union check this project implements to ensure that either `d768` or `b60b` is marked at least partially occluded.
   
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f6f26831d0010e985e5)
 
