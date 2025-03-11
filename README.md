@@ -437,7 +437,6 @@ This project was implemented in a timeboxed environment so the implemented heuri
    - Box detection resulting from shape detection could allow Annotations to be checked for potentially grouped signs, which is another edge case excplitly disallowed in the specifications.
 3. Perform OCR on the image crops of Annotations. Many signs have a very standardized set of possible text (`STOP`, `YIELD`, `SPEED LIMIT`, etc) and identifying the words present in an Annotation would give a very strong signal in determining if the label is correct.
 4. There may be some correlation between some sign types existing in a scene and the prescence or absence of other sign types. Exploring existing datasets may allow some predictability when evaluating the set of Annotations of a Task.
-5. 
-6. 
+5. Explore ML-based approaches to either pre-labeling or verifying annotated images. Scale has a very large dataset of labeled, reliable autonomous vehicle image data which could be used to quickly build a classifier that conforms to the labels that **ObserveSign** is trying to label. Leveraging that dataset should provide a very quick way to efficiently provide automated quality checks on annotated images.
 
 # Conclusion
