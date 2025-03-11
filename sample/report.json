@@ -131,14 +131,6 @@
             "task_id": "5f127f5f3a6b100017232099",
             "annotations": [
                 {
-                    "uuid": "86f7d374-8574-42be-ab2d-3f2945992f31",
-                    "label": "non_visible_face",
-                    "error_level": 1,
-                    "error_messages": [
-                        "Aspect ratio too extreme 5.25"
-                    ]
-                },
-                {
                     "uuid": "478496a5-1d09-4d53-889a-ef56a561b54b",
                     "label": "construction_sign",
                     "error_level": 1,
