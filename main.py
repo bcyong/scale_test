@@ -4,6 +4,8 @@ import argparse
 import scaleapi
 from scaleapi.tasks import TaskStatus
 import torchvision.ops.boxes as bops
+import cv2
+import numpy as np
 from task import Task, ErrorLevel
 
 API_KEY = "live_b1c5a645ea7e418a969b42b134e2d2d6"
@@ -20,7 +22,7 @@ ASPECT_RATIO_WARNING_THRESHOLD = 5
 
 POSITION_LOWER_WARNING_THRESHOLD = 0.15
 
-COLOR_TOO_DARK_THRESHOLD = 100
+COLOR_TOO_DARK_THRESHOLD = 90
 COLOR_TOO_BRIGHT_THRESHOLD = 650
 
 BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD = 0.9
@@ -156,6 +158,50 @@ def check_annotation_color(annotation):
                 annotation.set_error_level(ErrorLevel.WARNING)
                 annotation.add_error_message(ERROR_MSG_LABEL_COLOR_MISMATCH.format(annotation.label, annotation.dominant_color))
 
+# Adapted from https://www.geeksforgeeks.org/shape-detection-using-opencv-in-python/
+# def check_annotation_shape(annotation):
+#     # converting image into grayscale image
+#     gray = cv2.cvtColor(np.array(annotation.image_crop.convert('RGB')), cv2.COLOR_BGR2GRAY)
+
+#     # setting threshold of gray image 
+#     _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+#     # using a findContours() function
+#     contours, _ = cv2.findContours(
+#         threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+#     i = 0
+
+#     print(annotation.uuid)
+#     # list for storing names of shapes
+#     for contour in contours:
+
+#         # here we are ignoring first counter because
+#         # findcontour function detects whole image as shape
+#         if i == 0:
+#             i = 1
+#             continue
+
+#         # cv2.approxPloyDP() function to approximate the shape
+#         approx = cv2.approxPolyDP(
+#             contour, 0.01 * cv2.arcLength(contour, True), True)
+
+#         if len(approx) == 3:
+#             print("  Triangle")
+#         elif len(approx) == 4:
+#             print("  Quadrilateral")
+#         elif len(approx) == 5:
+#             print("  Pentagon")
+#         elif len(approx) == 6:
+#             print("  Hexagon")
+
+def validate_annotation(annotation, image):
+    check_basic_annotation_data(annotation, image)
+    check_annotation_size(annotation, image)
+    check_annotation_position(annotation, image)
+    check_annotation_color(annotation)
+    # check_annotation_shape(annotation)
+
 # Checks hueristics about the bounding boxes of the signs
 def check_bounding_boxes(task):
     # Adapted from https://stackoverflow.com/a/65988061
@@ -180,12 +226,6 @@ def check_bounding_boxes(task):
 
                 task.annotations[j].set_error_level(ErrorLevel.WARNING)
                 task.annotations[j].add_error_message(ERROR_MSG_OVERLAPPING_BOXES.format(task.annotations[j].uuid, task.annotations[i].uuid, iou))
-
-def validate_annotation(annotation, image):
-    check_basic_annotation_data(annotation, image)
-    check_annotation_size(annotation, image)
-    check_annotation_position(annotation, image)
-    check_annotation_color(annotation)
 
 def generate_task_report(task):
     task_report = {}
