@@ -160,7 +160,7 @@ def check_annotation_color(annotation):
 
 # Checks hueristics about the bounding boxes of the signs
 def check_bounding_boxes(task):
-    # https://stackoverflow.com/a/65988061
+    # Adapted from https://stackoverflow.com/a/65988061
 
     # This is n^2, and should be optimized
     for i in range(len(task.annotations)):
