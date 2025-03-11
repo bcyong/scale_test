@@ -228,6 +228,10 @@ Upon visual inspection, it does appear that the majority of the Annotations are 
 <details>
 <summary>5f127f643a6b1000172320a5</summary>
 
+The quality checks did not return any problematic annotations here. 
+
+Upon visual inspection the annotions seem solid. There is a glaring omission of 2 `policy_sign` in the right foreground and a less visible sign in the right background on a light pole from the annotations.
+
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f643a6b1000172320a5)
   ```
         {
