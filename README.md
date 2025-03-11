@@ -6,7 +6,7 @@ The objective of this project is to programmatically perform quality checks on h
 
 ## Scope of Work
 
-This project attempts to perform automated quality checks on already human labeled iamges according to specifications created by **ObserveSign**. To do this, the completed tasks are downloaded from Scale using the Scale API, as well as the associated original image being annotated, and a set of heuristics are applied to flag annotations that may contain errors or irregularites, which are then compiled into a JSON report.
+This project attempts to perform automated quality checks on already human labeled images according to specifications created by **ObserveSign**. To do this, the completed tasks are downloaded from Scale using the Scale API, as well as the associated original image being annotated, and a set of heuristics are applied to flag annotations that may contain errors or irregularities, which are then compiled into a JSON report.
 
 # Codebase
 
@@ -40,24 +40,24 @@ These are a basic sanity check on the data present in each Annotation. These che
    
 ## Size Heuristics
 
-These checks identify potential errors related to the size of the Annotation as well as truncation. The size of an annotation itself or when compared to the source iamge can provide powerful indications of potential problems.
+These checks identify potential errors related to the size of the Annotation as well as truncation. The size of an annotation itself or when compared to the source image can provide powerful indications of potential problems.
 
 1. Annotations with any dimension of `0 ` are disallowed despite being allowed in the Task parameters (`ERROR`)
 2. Annotations with a `truncation` of `100%` are disallowed as they would be fully invisible (`ERROR`)
-3. Annotations that are very small (< `SIZE_MIN_SIZE_WARNING`) with no truncation (`0%`) that are not labeled `non_visible_face` are flagged, as it's unlikely the labeler would be able to dtermine the type of sign (`WARNING`)
+3. Annotations that are very small (< `SIZE_MIN_SIZE_WARNING`) with no truncation (`0%`) that are not labeled `non_visible_face` are flagged, as it's unlikely the labeler would be able to determine the type of sign (`WARNING`)
 4. Annotations that are very small (<`SIZE_MIN_SIZE_WARNING`) and not mostly truncated (`75%`) are flagged (`ERRROR`)
-5. Annotations that are too large relative to the source iamge size (`SIZE_RATIO_WARNING_THRESHOLD`) in either dimension are flagged, as it's unlikely a sign would dominate the view from within a vehicle (`ERROR`)
+5. Annotations that are too large relative to the source image size (`SIZE_RATIO_WARNING_THRESHOLD`) in either dimension are flagged, as it's unlikely a sign would dominate the view from within a vehicle (`ERROR`)
 6. Annotations with very extreme aspect ratios (`ASPECT_RATIO_WARNING_THRESHOLD`) without very high truncation are flagged, as they are unlikely to exist (`WARNING`)
 
 ## Position Heuristics
 
-This check makes a prior assumption that no sign will extend into the bottom section of the image, as this would be directly in front of the vehicle. This also covers some instances of painted streets being annotated, as that is explictly disallowed in the specifications.
+This check makes a prior assumption that no sign will extend into the bottom section of the image, as this would be directly in front of the vehicle. This also covers some instances of painted streets being annotated, as that is explicitly disallowed in the specifications.
 
 1. If the lower position of the Annotation extends within `POSITION_LOWER_WARNING_THRESHOLD`% of the source image, this annotation is flagged (`WARNING`)
 
 ## Color Heuristics
 
-These checks attempt to look at the colors within the cropped iamge of the Annotation to flag potential illegible signs, as well as sanity check colors for certain labels.
+These checks attempt to look at the colors within the cropped image of the Annotation to flag potential illegible signs, as well as sanity check colors for certain labels.
 
 1. If the average color of the Annotation is too dim or too bright to likely be legible, it is flagged (`WARNING`)
 2. If the Annotation is labeled as a `construction_sign` and the dominant color is not some shade of orange, it is flagged (`WARNING`)
@@ -179,7 +179,7 @@ Upon visual inspection, it does appear that the majority of the Annotations are 
 
 The quality checks identify 6 annotations as potential duplicates with very high intersection over union values and marked them as errors.
 
-Upon visual inspection, the 6 identified annotations are indeed duplicates of each other, all identifying the same `Montgomery Post` `information_sign`. The rest of the annotations look solid, with the exception of the ommission of a couple `traffic_control_sign`s.
+Upon visual inspection, the 6 identified annotations are indeed duplicates of each other, all identifying the same `Montgomery Post` `information_sign`. The rest of the annotations look solid, with the exception of the omission of a couple `traffic_control_sign`s.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f671ab28b001762c204)
   ```
@@ -427,16 +427,16 @@ This project was implemented in a timeboxed environment so the implemented heuri
 1. Fix the implementation for the bounding box checks to optimize for runtime efficiency. The current check runs in O(n^2) time which will bog down in production environments. Switching to a quad tree algorithm should decrease the average runtime to O(n log n).
 2. Expand the use of color-based heuristics. The current checks are simplistic and a deeper exploration into using all of the dominant colors as well as their percentages to validate Annotation label types seems likely to increase effectiveness. More sophisticated calculations to determine brightness rather than simply summing up the RGB values will likely increase effectiveness as well. `background_color` could also be verified programmatically.
 3. Reccomment that **ObserveSign** modify their specification to either add a new label for illegible signs, or modify the criteria for `non_visible_face` to include illegible signs. Currently it appears some labelers are using a sign is too illegible to determine a label, even though the sign may not necessarily be presenting a `non_visible_face` as defined in the current specifications.
-4. Increase the flexibility and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calcuations are run so they're not running unnecessarily if the test is disabled by the user.
+4. Increase the flexibility and modularity of the existing script. Allow users to select which checks they'd like to run, and override constants if desired. Move potentially unneeded calculations to when the particular test requiring the calculations are run so they're not running unnecessarily if the test is disabled by the user.
 
 ## Future Quality Checks
 
 1. Add overlapping bounding box checks in addition to intersection over union checks. Annotations with a high percentage of overlap are likely either occluding or being occluded by another sign, so a higher `occlusion` should be checked in these cases.
 2. Perform simplistic shape detection within the image crop of an Annotation. Some labels (especially `traffic_control_sign`) correlate strongly to particular sign shapes so this potentially could add a lot of signal to checking Annotation correctness.
    - Using shape detection seems like a likely candidate to identify traffic lights due to their unique shape arrangement, which would allow checks to ensure `background_color` is properly labeled as `other` when a sign is likely a traffic light.
-   - Box detection resulting from shape detection could allow Annotations to be checked for potentially grouped signs, which is another edge case excplitly disallowed in the specifications.
+   - Box detection resulting from shape detection could allow Annotations to be checked for potentially grouped signs, which is another edge case explicitly disallowed in the specifications.
 3. Perform OCR on the image crops of Annotations. Many signs have a very standardized set of possible text (`STOP`, `YIELD`, `SPEED LIMIT`, etc) and identifying the words present in an Annotation would give a very strong signal in determining if the label is correct.
-4. There may be some correlation between some sign types existing in a scene and the prescence or absence of other sign types. Exploring existing datasets may allow some predictability when evaluating the set of Annotations of a Task.
+4. There may be some correlation between some sign types existing in a scene and the presence or absence of other sign types. Exploring existing datasets may allow some predictability when evaluating the set of Annotations of a Task.
 5. Explore ML-based approaches to either pre-labeling or verifying annotated images. Scale has a very large dataset of labeled, reliable autonomous vehicle image data which could be used to quickly build a classifier that conforms to the labels that **ObserveSign** is trying to label. Leveraging that dataset should provide a very quick way to efficiently provide automated quality checks on annotated images.
 
 # Conclusion
