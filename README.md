@@ -19,9 +19,9 @@ This project consists of two files, `main.py` and `task.py`.
 ## Dataflow
 
 The data in this project proceeds as follows:
-1. A set of completed tasks associated with a `project_name` are pulled down utilizing the Scale API
+1. A set of completed tasks associated with a `project_name` are downloaded utilizing the Scale API
 2. Data from each Task is used to create a Task object, with associated Annotations created as well
-3. The source image related to the Task is pulled down
+3. The source image related to the Task is downloaded
 4. A set of quality checks are performed on each Task, both analyzing individual Annotations as well as the full set of Annotations for a Task
 5. A JSON report is saved to disk listing Annotations for each Task that have been flagged with warnings or errors, along with the associated error messages
 
@@ -288,6 +288,10 @@ Upon visual inspection the annotions seem solid.
 
 <details>
 <summary>5f127f55fdc4150010e37244</summary>
+
+The quality checks identify 7 annotations that very small and are probably too small to be legible to label correctly. They also identify 1 annotation that appears to be too bright.
+
+Upon visual inspection, `2705` is a false positive for being identified as too bright. The annotation actually has an incorrectly large bounding box, but the extra area is actually dimmer than the sign itself, which is white. This may indicate that the brightness threshold needs to be increased for determining bright annotation warnings. The 7 annotations identified as too small are indeed too small to discern if any sign exists, and look to either be user misclicks or deliberate attempts to add extra annotations. The rest of the annotations appear correct.
 
   [View Audit](https://dashboard.scale.com/audit?taskId=5f127f55fdc4150010e37244)
   ```
