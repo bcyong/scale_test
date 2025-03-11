@@ -50,14 +50,6 @@
             "task_id": "5f127f671ab28b001762c204",
             "annotations": [
                 {
-                    "uuid": "83873098-643e-4c7d-8e09-aa064577a7c4",
-                    "label": "traffic_control_sign",
-                    "error_level": 1,
-                    "error_messages": [
-                        "Color too dark Brightness: 99.6540110226577"
-                    ]
-                },
-                {
                     "uuid": "b80eb8aa-4d3d-4a8c-b581-3f4eb6c018e3",
                     "label": "information_sign",
                     "error_level": 2,
