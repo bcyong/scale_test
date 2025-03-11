@@ -213,6 +213,152 @@ options:
   ```
 </details>
 
+<details>
+  <summary>5f127f643a6b1000172320a5</summary>
+
+  [View Audit](https://dashboard.scale.com/audit?taskId=5f127f643a6b1000172320a5)
+  ```
+        {
+            "task_id": "5f127f643a6b1000172320a5",
+            "annotations": []
+        },
+  ```
+</details>
+
+<details>
+  <summary>5f127f5f3a6b100017232099</summary>
+
+  [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5f3a6b100017232099)
+  ```
+        {
+            "task_id": "5f127f5f3a6b100017232099",
+            "annotations": [
+                {
+                    "uuid": "86f7d374-8574-42be-ab2d-3f2945992f31",
+                    "label": "non_visible_face",
+                    "error_level": 1,
+                    "error_messages": [
+                        "Aspect ratio too extreme 5.25"
+                    ]
+                },
+                {
+                    "uuid": "478496a5-1d09-4d53-889a-ef56a561b54b",
+                    "label": "construction_sign",
+                    "error_level": 1,
+                    "error_messages": [
+                        "Label and color mismatch Label: construction_sign Color: [120.85358   93.744545  76.73831 ]"
+                    ]
+                },
+                {
+                    "uuid": "25e6e90c-7acb-4786-a0fb-ca7b10fc3687",
+                    "label": "non_visible_face",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Size too large relative to image 0.7694117647058824",
+                        "Position too low Label max: 850 Image threshold: 722.5"
+                    ]
+                }
+            ]
+        },
+  ```
+</details>
+
+<details>
+  <summary>5f127f5ab1cb1300109e4ffc</summary>
+
+  [View Audit](https://dashboard.scale.com/audit?taskId=5f127f5ab1cb1300109e4ffc)
+  ```
+        {
+            "task_id": "5f127f5ab1cb1300109e4ffc",
+            "annotations": []
+        },
+  ```
+</details>
+
+<details>
+  <summary>5f127f55fdc4150010e37244</summary>
+
+  [View Audit](https://dashboard.scale.com/audit?taskId=5f127f55fdc4150010e37244)
+  ```
+        {
+            "task_id": "5f127f55fdc4150010e37244",
+            "annotations": [
+                {
+                    "uuid": "ec8b8899-5d60-44c1-9919-fae2902d2705",
+                    "label": "information_sign",
+                    "error_level": 1,
+                    "error_messages": [
+                        "Color too bright Brightness: 681.3055555555555"
+                    ]
+                },
+                {
+                    "uuid": "97319a82-2635-4785-9589-ff7e0b67bf81",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "31b6471b-0af3-4eb0-9923-57ca32972fde",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "b43ba10e-0507-4eaf-ba67-c6fb49d6beca",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "3d2d21c8-7c44-4c04-911b-168c22db6b48",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "61f914e3-5699-4e7c-b3be-c9722b43c229",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "17b437ad-168b-47c6-92de-3b308157ce0b",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                },
+                {
+                    "uuid": "5111c4d1-5f26-4860-a834-b3890ae5d362",
+                    "label": "traffic_control_sign",
+                    "error_level": 2,
+                    "error_messages": [
+                        "Probably not legible Label: traffic_control_sign Size: 2.0, 2.0",
+                        "Size too small 2.0, 2.0"
+                    ]
+                }
+            ]
+        }
+  ```
+</details>
+
 The full report can be found [here](sample/report.json)
 
 # Reflections and Future Quality Checks
