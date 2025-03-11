@@ -1,4 +1,5 @@
-Usage: 
+Usage:
+
 `> python main.py`
 
 Full Usage:
