@@ -96,6 +96,7 @@ class Annotation:
         self.average_color = None
 
         self.bounding_box = torch.tensor([[self.left, self.top, self.left + self.width, self.top + self.height]], dtype=torch.float)
+        self.bbox = (self.left, self.top, self.left + self.width, self.top + self.height)
 
         self.error_level = ErrorLevel.NORMAL
         self.error_messages = []

@@ -6,6 +6,7 @@ from scaleapi.tasks import TaskStatus
 import torchvision.ops.boxes as bops
 import cv2
 import numpy as np
+import pyqtree
 from task import Task, ErrorLevel
 
 API_KEY = "live_b1c5a645ea7e418a969b42b134e2d2d6"
@@ -26,7 +27,7 @@ COLOR_TOO_DARK_THRESHOLD = 90
 COLOR_TOO_BRIGHT_THRESHOLD = 650
 
 BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD = 0.9
-BOUNDING_BOX_IOU_OVERLAP_WARNING_THRESHOLD = 0.5
+BOUNDING_BOX_OVERLAP_WARNING_THRESHOLD = 0.75
 
 # Error Messages
 ERROR_MSG_NO_SIZE = "No size"
@@ -46,7 +47,7 @@ ERROR_MSG_COLOR_TOO_DARK = "Color too dark Brightness: {}"
 ERROR_MSG_COLOR_TOO_BRIGHT = "Color too bright Brightness: {}"
 ERROR_MSG_LABEL_COLOR_MISMATCH = "Label and color mismatch Label: {} Color: {}"
 ERROR_MSG_DUPLICATE_BOXES = "Duplicate boxes between {} and {} (Overlap: {})"
-ERROR_MSG_OVERLAPPING_BOXES = "Overlapping boxes between {} and {} (Overlap: {})"
+ERROR_MSG_OVERLAPPING_BOXES = "Overlapping boxes between {} and {} with no occlusion (Overlap: {})"
 
 def get_tasks(client, project_name, created_after, created_before):
     # Define optional filters (adjust as necessary)
@@ -122,7 +123,7 @@ def check_annotation_size(annotation, image):
     # Check if sign is too large relative to image
     if width / image_width > SIZE_RATIO_WARNING_THRESHOLD or height / image_height > SIZE_RATIO_WARNING_THRESHOLD:
         annotation.set_error_level(ErrorLevel.ERROR)
-        annotation.add_error_message(ERROR_MSG_SIZE_TO_IMAGE_TOO_LARGE.format(max(width / image_width, height / image_height)))
+        annotation.add_error_message(ERROR_MSG_SIZE_TO_IMAGE_TOO_LARGE.format(round(max(width / image_width, height / image_height), 2)))
 
     # Check if sign has extreme aspect ratio
     if (width / annotation.height > ASPECT_RATIO_WARNING_THRESHOLD or height / annotation.width > ASPECT_RATIO_WARNING_THRESHOLD):
@@ -130,7 +131,7 @@ def check_annotation_size(annotation, image):
         # Allow for very truncated signs causing extreme aspect ratios
         if annotation.truncation != "75%":
             annotation.set_error_level(ErrorLevel.WARNING)
-            annotation.add_error_message(ERROR_MSG_ASPECT_RATIO_TOO_EXTREME.format(max(width / height, height / width)))
+            annotation.add_error_message(ERROR_MSG_ASPECT_RATIO_TOO_EXTREME.format(round(max(width / height, height / width), 2)))
 
 # Checks if the sign is too low on the image, with the assumption that the camera is looking out from a vehicle
 def check_annotation_position(annotation, image):
@@ -146,10 +147,10 @@ def check_annotation_color(annotation):
 
     if brightness < COLOR_TOO_DARK_THRESHOLD:
         annotation.set_error_level(ErrorLevel.WARNING)
-        annotation.add_error_message(ERROR_MSG_COLOR_TOO_DARK.format(brightness))
+        annotation.add_error_message(ERROR_MSG_COLOR_TOO_DARK.format(round(brightness, 2)))
     elif brightness > COLOR_TOO_BRIGHT_THRESHOLD:
         annotation.set_error_level(ErrorLevel.WARNING)
-        annotation.add_error_message(ERROR_MSG_COLOR_TOO_BRIGHT.format(brightness))
+        annotation.add_error_message(ERROR_MSG_COLOR_TOO_BRIGHT.format(round(brightness, 2)))
     elif annotation.label == "construction_sign":
         if annotation.dominant_color is not None:
             r, g, b = annotation.dominant_color
@@ -202,30 +203,48 @@ def validate_annotation(annotation, image):
     check_annotation_color(annotation)
     # check_annotation_shape(annotation)
 
+def get_overlap(bbox, overlapping_bbox):
+    x1 = max(bbox[0], overlapping_bbox[0])
+    y1 = max(bbox[1], overlapping_bbox[1])
+    x2 = min(bbox[2], overlapping_bbox[2])
+    y2 = min(bbox[3], overlapping_bbox[3])
+
+    if x2 > x1 and y2 > y1:
+        intersection_area = (x2 - x1) * (y2 - y1)
+        annotation_area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+        return intersection_area / annotation_area
+
+    return 0
+
 # Checks hueristics about the bounding boxes of the signs
 def check_bounding_boxes(task):
     # Adapted from https://stackoverflow.com/a/65988061
 
-    # This is n^2, and should be optimized
-    for i in range(len(task.annotations)):
-        i_box = task.annotations[i].bounding_box
+    # Create a quadtree for the bounding boxes
+    quadtree = pyqtree.Index(bbox=[0, 0, task.image.width, task.image.height])
+    for annotation in task.annotations:
+        quadtree.insert(annotation, annotation.bbox)
 
-        for j in range(i + 1, len(task.annotations)):
-            j_box = task.annotations[j].bounding_box
+    # Check for overlapping bounding boxes
+    for annotation in task.annotations:
+        overlapping_annotations = quadtree.intersect(annotation.bbox)
 
-            iou = bops.box_iou(i_box, j_box).item()
-            if iou > BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD:
-                task.annotations[i].set_error_level(ErrorLevel.ERROR)
-                task.annotations[i].add_error_message(ERROR_MSG_DUPLICATE_BOXES.format(task.annotations[i].uuid, task.annotations[j].uuid, iou))
+        for overlapping_annotation in overlapping_annotations:
+            if overlapping_annotation != annotation:
+                iou = bops.box_iou(annotation.bounding_box, overlapping_annotation.bounding_box).item()
+                overlap = get_overlap(annotation.bbox, overlapping_annotation.bbox)
 
-                task.annotations[j].set_error_level(ErrorLevel.ERROR)
-                task.annotations[j].add_error_message(ERROR_MSG_DUPLICATE_BOXES.format(task.annotations[j].uuid, task.annotations[i].uuid, iou))
-            elif iou > BOUNDING_BOX_IOU_OVERLAP_WARNING_THRESHOLD:
-                task.annotations[i].set_error_level(ErrorLevel.WARNING)
-                task.annotations[i].add_error_message(ERROR_MSG_OVERLAPPING_BOXES.format(task.annotations[i].uuid, task.annotations[j].uuid, iou))
+                if iou > BOUNDING_BOX_IOU_DUPLICATE_WARNING_THRESHOLD:
+                    annotation.set_error_level(ErrorLevel.ERROR)
+                    annotation.add_error_message(ERROR_MSG_DUPLICATE_BOXES.format(annotation.uuid, overlapping_annotation.uuid, round(iou, 2)))
+                elif overlap > BOUNDING_BOX_OVERLAP_WARNING_THRESHOLD:
+                    if annotation.occlusion == "0%" and overlapping_annotation.occlusion == "0%":
+                        annotation.set_error_level(ErrorLevel.WARNING)
+                        annotation.add_error_message(ERROR_MSG_OVERLAPPING_BOXES.format(annotation.uuid, overlapping_annotation.uuid, round(overlap, 2)))
 
-                task.annotations[j].set_error_level(ErrorLevel.WARNING)
-                task.annotations[j].add_error_message(ERROR_MSG_OVERLAPPING_BOXES.format(task.annotations[j].uuid, task.annotations[i].uuid, iou))
+                        overlapping_annotation.set_error_level(ErrorLevel.WARNING)
+                        overlapping_annotation.add_error_message(ERROR_MSG_OVERLAPPING_BOXES.format(overlapping_annotation.uuid, annotation.uuid, round(overlap, 2)))
+
 
 def generate_task_report(task):
     task_report = {}
